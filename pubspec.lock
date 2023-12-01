@@ -18,7 +18,7 @@ packages:
     source: hosted
     version: "2.0.2"
   bloc:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: bloc
       sha256: "3820f15f502372d979121de1f6b97bfcf1630ebff8fe1d52fb2b0bfa49be5b49"
@@ -204,7 +204,7 @@ packages:
     source: hosted
     version: "6.1.1"
   result_dart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: result_dart
       sha256: f28a171d55e2e1c1753b41d4d8edcaff886f103e73c575d14764913907e57928
