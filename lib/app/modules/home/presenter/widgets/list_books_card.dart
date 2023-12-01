@@ -55,10 +55,11 @@ class ListBooksCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 115,
+            left: 106,
+            top: -15,
             child: IconButton(
               onPressed: favoriteFunction,
-              icon: const Icon(Icons.star),
+              icon: const Icon(Icons.bookmark_sharp, size: 40),
             ),
           ),
         ],
