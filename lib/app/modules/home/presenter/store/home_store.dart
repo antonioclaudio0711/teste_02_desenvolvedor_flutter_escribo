@@ -4,17 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/domain/entities/book.dart';
 import 'package:bloc/bloc.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/domain/usecases/fetch_books_usecase/fetch_books_usecase.dart';
-import 'package:teste_tecnico_02_ereader/app/modules/home/domain/usecases/fetch_epub_usecase/fetch_epub_usecase.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/external/mappers/book_mapper.dart';
 
 part 'home_state.dart';
 
 class HomeStore extends Cubit<HomeState> {
-  HomeStore(this._fetchBooksUsecase, this._fetchEpubUsecase)
-      : super(const HomeState());
+  HomeStore(
+    this._fetchBooksUsecase,
+  ) : super(const HomeState());
 
   final FetchBooksUsecase _fetchBooksUsecase;
-  final FetchEpubUsecase _fetchEpubUsecase;
 
   Future<void> fetchBooks() async {
     emit(state.copyWith(state: const LoadingHomeState()));
@@ -94,11 +93,5 @@ class HomeStore extends Cubit<HomeState> {
       state: const SuccessHomeState(),
       favoriteBooksList: objectFavoriteBooksList,
     ));
-  }
-
-  Future<void> downloadAndSaveEpub({required String url}) async {
-    emit(state.copyWith(state: const LoadingHomeState()));
-
-    await _fetchEpubUsecase(bookUrl: url);
   }
 }

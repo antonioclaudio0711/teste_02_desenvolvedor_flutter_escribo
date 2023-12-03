@@ -8,10 +8,12 @@ class CustomDialog extends StatelessWidget {
     super.key,
     required this.book,
     required this.onClickDownload,
+    required this.onClickOpenEbook,
   });
 
   final Book book;
   final VoidCallback onClickDownload;
+  final VoidCallback onClickOpenEbook;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class CustomDialog extends StatelessWidget {
               child: const Text('Baixar E-Book'),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: onClickOpenEbook,
               child: const Text('Abrir E-Book'),
             )
           ],
