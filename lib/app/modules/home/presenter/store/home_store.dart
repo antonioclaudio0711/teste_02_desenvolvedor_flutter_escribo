@@ -94,4 +94,10 @@ class HomeStore extends Cubit<HomeState> {
       favoriteBooksList: objectFavoriteBooksList,
     ));
   }
+
+  void changeLoading({required bool isLoading}) {
+    emit(state.copyWith(
+      isLoading: isLoading,
+    ));
+  }
 }

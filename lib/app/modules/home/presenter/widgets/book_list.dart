@@ -7,6 +7,7 @@ import 'package:teste_tecnico_02_ereader/app/modules/home/domain/entities/book.d
 import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/store/home_store.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/widgets/books_list_card.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/widgets/custom_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vocsy_epub_viewer/epub_viewer.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,8 +28,55 @@ class BookList extends StatefulWidget {
 class _BookListState extends State<BookList> {
   HomeStore get store => widget.store;
   List<Book> get bookList => widget.bookList;
-  bool isFavorite = false;
   String filePath = '';
+
+  Future<void> epubDownload(
+      {required String bookUrl, required HomeStore store}) async {
+    try {
+      store.changeLoading(isLoading: true);
+      final Uri url = Uri.parse(bookUrl);
+      if (!await launchUrl(url)) {
+        throw Exception('URL não encontrada $url');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<void> openAndReadEpub({
+    required Book book,
+    required HomeStore store,
+  }) async {
+    store.changeLoading(isLoading: true);
+
+    final response = await http.get(Uri.parse(book.downloadUrl));
+    final directory = await getApplicationDocumentsDirectory();
+    File file = File('${directory.path}/livro${book.id}.epub');
+    await file.writeAsBytes(response.bodyBytes);
+
+    setState(() {
+      filePath = file.path;
+    });
+
+    VocsyEpub.setConfig(
+      themeColor: Colors.purple,
+      identifier: "book",
+      scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
+      allowSharing: true,
+      enableTts: true,
+      nightMode: true,
+    );
+
+    VocsyEpub.open(
+      filePath,
+      lastLocation: EpubLocator.fromJson({
+        "bookId": "2239",
+        "href": "/OEBPS/ch06.xhtml",
+        "created": 1539934158390,
+        "locations": {"cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"}
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,95 +101,29 @@ class _BookListState extends State<BookList> {
               return BooksListCard(
                 cardFunction: () {
                   showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (context) {
                         return CustomDialog(
-                            book: bookList[index],
-                            onClickOpenEbook: () async {
-                              print("=====filePath======$filePath");
-                              if (filePath == "") {
-                                final response = await http.get(
-                                    Uri.parse(bookList[index].downloadUrl));
-                                final directory =
-                                    await getApplicationDocumentsDirectory();
-                                File file = File(
-                                    '${directory.path}/livro${bookList[index].id}.epub');
-                                await file.writeAsBytes(response.bodyBytes);
-                                print('Arquivo salvo em: ${file.path}');
-
-                                // final httpClientRequest = await response.close();
-                                // final appDocDir =
-                                //     await DownloadsPathProvider.downloadsDirectory;
-                                // final file =
-                                //     File('${appDocDir.path}/arquivo.epub');
-                                // final fileSink = file.openWrite();
-
-                                // await httpClientRequest.pipe(fileSink);
-
-                                // await fileSink.close();
-
-                                setState(() {
-                                  filePath = file.path;
-                                });
-
-                                print(filePath);
-                              } else {
-                                VocsyEpub.setConfig(
-                                  themeColor: Theme.of(context).primaryColor,
-                                  identifier: "iosBook",
-                                  scrollDirection:
-                                      EpubScrollDirection.ALLDIRECTIONS,
-                                  allowSharing: true,
-                                  enableTts: true,
-                                  nightMode: true,
-                                );
-
-                                // get current locator
-                                VocsyEpub.locatorStream.listen((locator) {
-                                  print('LOCATOR: $locator');
-                                });
-
-                                VocsyEpub.open(
-                                  filePath,
-                                  lastLocation: EpubLocator.fromJson({
-                                    "bookId": "2239",
-                                    "href": "/OEBPS/ch06.xhtml",
-                                    "created": 1539934158390,
-                                    "locations": {
-                                      "cfi":
-                                          "epubcfi(/0!/4/4[simple_book]/2/2/6)"
-                                    }
-                                  }),
-                                );
-                              }
-                            },
-                            onClickDownload: () async {
-                              final response = await http
-                                  .get(Uri.parse(bookList[index].downloadUrl));
-                              final directory = await getDownloadsDirectory();
-
-                              File file = File(
-                                  '${directory!.path}/livro${bookList[index].id}.epub');
-                              await file.writeAsBytes(response.bodyBytes);
-                              print('Arquivo salvo em: ${file.path}');
-
-                              // final httpClientRequest = await response.close();
-                              // final appDocDir =
-                              //     await DownloadsPathProvider.downloadsDirectory;
-                              // final file =
-                              //     File('${appDocDir.path}/arquivo.epub');
-                              // final fileSink = file.openWrite();
-
-                              // await httpClientRequest.pipe(fileSink);
-
-                              // await fileSink.close();
-
-                              setState(() {
-                                filePath = file.path;
-                              });
-
-                              print(filePath);
-                            });
+                          store: store,
+                          book: bookList[index],
+                          onClickOpenEbook: () async {
+                            await openAndReadEpub(
+                              book: bookList[index],
+                              store: store,
+                            );
+                            await Future.delayed(const Duration(seconds: 10));
+                            store.changeLoading(isLoading: false);
+                          },
+                          onClickDownload: () async {
+                            await epubDownload(
+                              bookUrl: bookList[index].downloadUrl,
+                              store: store,
+                            );
+                            await Future.delayed(const Duration(seconds: 4));
+                            store.changeLoading(isLoading: false);
+                          },
+                        );
                       });
                 },
                 markerColor:

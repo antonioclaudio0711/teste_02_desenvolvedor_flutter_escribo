@@ -37,12 +37,14 @@ class HomeState extends Equatable {
   final List<Book> booksList;
   final List<Book> favoriteBooksList;
   final List<int> favoriteBooksIdList;
+  final bool isLoading;
 
   const HomeState({
     this.state = const InitialHomeState(),
     this.booksList = const [],
     this.favoriteBooksList = const [],
     this.favoriteBooksIdList = const [],
+    this.isLoading = false,
   });
 
   HomeState copyWith({
@@ -50,12 +52,14 @@ class HomeState extends Equatable {
     List<Book>? booksList,
     List<Book>? favoriteBooksList,
     List<int>? favoriteBooksIdList,
+    bool? isLoading,
   }) {
     return HomeState(
       state: state ?? this.state,
       booksList: booksList ?? this.booksList,
       favoriteBooksList: favoriteBooksList ?? this.favoriteBooksList,
       favoriteBooksIdList: favoriteBooksIdList ?? this.favoriteBooksIdList,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 
@@ -65,5 +69,6 @@ class HomeState extends Equatable {
         booksList,
         favoriteBooksList,
         favoriteBooksIdList,
+        isLoading,
       ];
 }
