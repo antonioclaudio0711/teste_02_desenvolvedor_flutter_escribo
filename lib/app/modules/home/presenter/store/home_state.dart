@@ -34,26 +34,31 @@ class FailureHomeState extends HomeStateEReaderEscribo {
 
 class HomeState extends Equatable {
   final HomeStateEReaderEscribo state;
-  final List<Book> listBooks;
+  final List<Book> booksList;
+  final List<Book> favoriteBooksList;
 
   const HomeState({
     this.state = const InitialHomeState(),
-    this.listBooks = const [],
+    this.booksList = const [],
+    this.favoriteBooksList = const [],
   });
 
   HomeState copyWith({
     HomeStateEReaderEscribo? state,
-    List<Book>? listBooks,
+    List<Book>? booksList,
+    List<Book>? favoriteBooksList,
   }) {
     return HomeState(
       state: state ?? this.state,
-      listBooks: listBooks ?? this.listBooks,
+      booksList: booksList ?? this.booksList,
+      favoriteBooksList: favoriteBooksList ?? this.favoriteBooksList,
     );
   }
 
   @override
   List<Object?> get props => [
         state,
-        listBooks,
+        booksList,
+        favoriteBooksList,
       ];
 }

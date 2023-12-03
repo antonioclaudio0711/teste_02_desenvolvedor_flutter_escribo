@@ -8,6 +8,7 @@ class ListBooksCard extends StatelessWidget {
     required this.cardImage,
     required this.bookTitle,
     required this.bookAuthor,
+    required this.isFavorite,
   });
 
   final VoidCallback cardFunction;
@@ -15,6 +16,7 @@ class ListBooksCard extends StatelessWidget {
   final String cardImage;
   final String bookTitle;
   final String bookAuthor;
+  final bool isFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,11 @@ class ListBooksCard extends StatelessWidget {
             top: -15,
             child: IconButton(
               onPressed: favoriteFunction,
-              icon: const Icon(Icons.bookmark_sharp, size: 40),
+              icon: Icon(
+                Icons.bookmark_sharp,
+                size: 40,
+                color: isFavorite ? Colors.red : null,
+              ),
             ),
           ),
         ],
