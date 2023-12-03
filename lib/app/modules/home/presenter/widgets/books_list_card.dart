@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class ListBooksCard extends StatelessWidget {
-  const ListBooksCard({
+class BooksListCard extends StatelessWidget {
+  const BooksListCard({
     super.key,
     required this.cardFunction,
     required this.favoriteFunction,
     required this.cardImage,
     required this.bookTitle,
     required this.bookAuthor,
-    required this.isFavorite,
+    required this.markerColor,
   });
 
   final VoidCallback cardFunction;
@@ -16,7 +16,7 @@ class ListBooksCard extends StatelessWidget {
   final String cardImage;
   final String bookTitle;
   final String bookAuthor;
-  final bool isFavorite;
+  final Color? markerColor;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class ListBooksCard extends StatelessWidget {
               icon: Icon(
                 Icons.bookmark_sharp,
                 size: 40,
-                color: isFavorite ? Colors.red : null,
+                color: markerColor,
               ),
             ),
           ),

@@ -45,7 +45,17 @@ class HomeStore extends Cubit<HomeState> {
     ));
   }
 
-  void editFavoriteList({required Book book}) async {
+  void classifyFavoriteBooks() {
+    List<int> favoriteBookIdList =
+        state.favoriteBooksList.map((book) => book.id).toList();
+
+    emit(state.copyWith(
+      state: const SuccessHomeState(),
+      favoriteBooksIdList: favoriteBookIdList,
+    ));
+  }
+
+  Future<void> editFavoriteList({required Book book}) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     bool alreadyIsFavorite = false;
 
@@ -81,36 +91,5 @@ class HomeStore extends Cubit<HomeState> {
       state: const SuccessHomeState(),
       favoriteBooksList: objectFavoriteBooksList,
     ));
-  }
-
-  // void removeBookToFavoriteList({required Book book}) async {
-  //   SharedPreferences preferences = await SharedPreferences.getInstance();
-
-  //   List<String> stringFavoriteBooksList =
-  //       preferences.getStringList('favoriteBook') ?? [];
-
-  //   stringFavoriteBooksList.remove(jsonEncode(BookMapper().booksToJson(book)));
-
-  //   await preferences.setStringList(
-  //     'favoriteBook',
-  //     stringFavoriteBooksList,
-  //   );
-
-  //   List<Book> objectFavoriteBooksList = stringFavoriteBooksList
-  //       .map((jsonBook) => BookMapper().booksFromJson(jsonDecode(jsonBook)))
-  //       .toList();
-
-  //   emit(state.copyWith(
-  //     state: const SuccessHomeState(),
-  //     favoriteBooksList: objectFavoriteBooksList,
-  //   ));
-  // }
-
-  void deleteFavoriteBooksList() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    preferences.remove('favoriteBook');
-
-    loadFavoriteBooksList();
   }
 }

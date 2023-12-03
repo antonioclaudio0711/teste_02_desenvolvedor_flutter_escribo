@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/domain/entities/book.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/store/home_store.dart';
-import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/widgets/list_books_card.dart';
+import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/widgets/books_list_card.dart';
 
 class BookList extends StatefulWidget {
   const BookList({
@@ -45,12 +45,19 @@ class _BookListState extends State<BookList> {
             ),
             itemCount: bookList.length,
             itemBuilder: (context, index) {
-              return ListBooksCard(
+              return BooksListCard(
                 cardFunction: () {},
-                isFavorite: isFavorite,
-                favoriteFunction: () => store.editFavoriteList(
-                  book: bookList[index],
-                ),
+                markerColor:
+                    state.favoriteBooksIdList.contains(bookList[index].id)
+                        ? Colors.red
+                        : null,
+                favoriteFunction: () async {
+                  await store.editFavoriteList(
+                    book: bookList[index],
+                  );
+
+                  store.classifyFavoriteBooks();
+                },
                 cardImage: bookList[index].coverUrl,
                 bookTitle: utf8.decode(
                   bookList[index].title.runes.toList(),

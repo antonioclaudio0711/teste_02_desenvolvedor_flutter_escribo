@@ -7,7 +7,7 @@ class BookMapper {
       'title': entity.title,
       'author': entity.author,
       'cover_url': entity.coverUrl,
-      'download_url': entity.downloadUrl
+      'download_url': entity.downloadUrl,
     };
   }
 

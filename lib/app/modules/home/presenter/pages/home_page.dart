@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> inicializationApp() async {
     await store.fetchBooks();
     await store.loadFavoriteBooksList();
+    store.classifyFavoriteBooks();
   }
 
   @override
@@ -90,13 +91,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-                    child: ElevatedButton(
-                      onPressed: () => store.deleteFavoriteBooksList(),
-                      child: const Text('Limpar lista de favoritos'),
-                    ),
-                  ),
+                  const SizedBox(height: 15),
                   isSelectedAllBooksList
                       ? BlocBuilder<HomeStore, HomeState>(
                           bloc: store,
