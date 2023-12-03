@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 25),
                   isSelectedAllBooksList
                       ? BlocBuilder<HomeStore, HomeState>(
                           bloc: store,

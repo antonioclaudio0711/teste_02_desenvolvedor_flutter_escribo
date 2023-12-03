@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/domain/entities/book.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/store/home_store.dart';
 import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/widgets/books_list_card.dart';
+import 'package:teste_tecnico_02_ereader/app/modules/home/presenter/widgets/custom_dialog.dart';
 
 class BookList extends StatefulWidget {
   const BookList({
@@ -46,7 +47,18 @@ class _BookListState extends State<BookList> {
             itemCount: bookList.length,
             itemBuilder: (context, index) {
               return BooksListCard(
-                cardFunction: () {},
+                cardFunction: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CustomDialog(
+                          book: bookList[index],
+                          onClickDownload: () => store.downloadAndSaveEpub(
+                            url: bookList[index].downloadUrl,
+                          ),
+                        );
+                      });
+                },
                 markerColor:
                     state.favoriteBooksIdList.contains(bookList[index].id)
                         ? Colors.red
